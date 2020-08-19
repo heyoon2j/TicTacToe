@@ -1,0 +1,96 @@
+@startuml
+
+/' Player's Interface '/
+interface Inputable {
+    + {abstract} void getInput()
+}
+
+/' Tictactoe's Interface '/
+interface Playable {
+    + {abstract} void play()
+}
+
+interface Simulatable {
+    + {abstract} void initialize()
+    + {abstract} void finish()
+    + {abstract} void reset()
+}
+
+interface Printable {
+    + {abstract} void printStatus()
+}
+
+class Position {
+    - int x
+    - int y
+    + Position()
+    + Position(int x, int y)
+    + void getX()
+    + void getY()
+    + void setX()
+    + void setY()
+}
+
+abstract class Player implements Inputable  {
+    - String name
+    - int winNum
+    - int loseNum
+    - Position pos
+    + Player()
+    + Player(String name)
+    + {abstract} void getInput()
+}
+
+class HumanPlayer extends Player {
+    + HumanPlayer(String name)
+    + getInput()
+}
+
+class AIPlayer extends Player {
+    - String level
+    + AIPlayer(String level)
+    + getInput()
+    - getInput_Beginner()
+    - getInput_Expert()
+}
+
+class Tictactoe implements Playable, Simulatable, Printable{
+    + {static} char[] STONE
+    - char[][] board
+    - int winningCount
+    - Player player1
+    - Player player2
+    - Player curPlayer
+
+    + Tictactoe(int winningCount)
+
+    + void play()
+    + void initialize()
+    + void finish()
+    + void reset()
+    + void getPlayer1()
+    + void getPlayer2()
+    + Player setPlayer1()
+    + Player setPlayer2()
+}
+
+class TictactoeRule {
+    + {static} boolean chkVictoryCondition(char[][] board, Position pos)
+    + {static} boolean isRangeOfBoard(Position pos)
+    + {static} boolean isEnabled(char[][] board, Position pos)
+}
+
+enum AILevel {
+    BEGINNER
+    ADVANCED
+    MASTER
+    EXPERT
+}
+
+
+Player o- Position
+Tictactoe *- Player
+Tictactoe ..> TictactoeRule
+
+@enduml
+
