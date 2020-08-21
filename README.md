@@ -17,3 +17,6 @@
 3. With AI(Expert)
     * Play with Computer( User vs Computer )
     * Computer input position after checking win-lose condition.
+
+#### Class Diagram
+![classDiagram](./classDiagram.png)
