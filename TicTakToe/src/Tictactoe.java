@@ -20,31 +20,39 @@ public class Tictactoe implements Playable, Simulatable, Printable {
         while (true) {
 
             // Input Postion
-            curPlayer.getInput();
-            // validate position
-            if (!TictactoeRule.isRangeOfBoard(curPlayer.getPos())) {
-                System.out.println("Out Of Range, Please Input position(0~2 0~2).");
-                continue;
-            }
-            if (!TictactoeRule.isEnabled(this.board, curPlayer.getPos())) {
-                System.out.println("Stone exists on current position, Please Input other position.");
-                continue;
-            }
+            curPlayer.getInput(this.board);
 
             // Put Stone on board
-            board[curPlayer.getPos().getY()][curPlayer.getPos().getX()] = (curPlayer == player1) ? STONE[0] : STONE[1];
+            char curStone = (curPlayer == player1) ? player1.getStone() : player2.getStone();
+            board[curPlayer.getPos().getY()][curPlayer.getPos().getX()] = curStone;
             printStatus();
 
             // Check Victory Condition
-            if (TictactoeRule.chkVictoryCondition(this.board, curPlayer.getPos())) {
-                curPlayer.setWinNum(curPlayer.getWinNum() + 1);
+            boolean winDrawCondition[] = new boolean[]{false, false};
+            winDrawCondition[0] = (TictactoeRule.chkVictoryCondition(this.board, curPlayer.getPos(), curStone));
+            if(!winDrawCondition[0]) {
+                winDrawCondition[1] = (TictactoeRule.chkDrawCondition(this.board));
+            }
+
+            if(winDrawCondition[0] || winDrawCondition[1]){
+                if(winDrawCondition[0]){
+                    curPlayer.setWinNum(curPlayer.getWinNum() + 1);
+                    System.out.printf("Winning Count : %d\n", this.winningCount);
+                    System.out.printf(" %s %d : %d %s \n", player1.getName(), player1.getWinNum(), player2.getWinNum(), player2.getName());
+                }
+
                 if (curPlayer.getWinNum() == this.winningCount) {
                     break;
+                }
+
+                if(winDrawCondition[1]){
+                    System.out.println("Game Draw~~~~!!!");
                 }
 
                 finish();
                 continue;
             }
+
             curPlayer = (curPlayer == player1) ? player2 : player1;
         }
     }
@@ -73,9 +81,24 @@ public class Tictactoe implements Playable, Simulatable, Printable {
         int selectPlay = 0;
 
         System.out.println("########## Game Start ##########");
-        System.out.print("Winning Count : ");
-        this.winningCount = sc.nextInt();
-        sc.nextLine();
+        System.out.println("");
+
+        while(true) {
+            try {
+                System.out.print("Winning Count : ");
+                this.winningCount = sc.nextInt();
+                sc.nextLine();
+
+                if(this.winningCount != 0){
+                    break;
+                }
+            } catch (Exception e) {
+                sc.nextLine();
+            } finally {
+                if(this.winningCount <= 0)
+                    System.out.println("Input Number~!!, Over 0");
+            }
+        }
 
         System.out.println("-----------------------");
         System.out.println("|      Select Play     |");
@@ -84,13 +107,28 @@ public class Tictactoe implements Playable, Simulatable, Printable {
         System.out.println("| 2. With AI(Beginner) |");
         System.out.println("| 3. With AI(Expert)   |");
         System.out.println("-----------------------");
-        System.out.print("Select Play : ");
-        selectPlay = sc.nextInt();
-        sc.nextLine();
 
+        while(true) {
+            try {
+                System.out.print("Select Play : ");
+                selectPlay = sc.nextInt();
+                sc.nextLine();
+
+                if(selectPlay == 1 || selectPlay == 2 || selectPlay == 3) {
+                    break;
+                }
+
+            }catch (Exception e){
+                sc.nextLine();
+            }finally {
+                if(selectPlay != 1 && selectPlay != 2 && selectPlay != 3)
+                    System.out.println("Input Error. Only Input '1' or '2' or '3'");
+            }
+        }
         System.out.print("Player Name : ");
         playerName = sc.nextLine();
         this.player1 = new HumanPlayer(playerName);
+        this.player1.setStone(STONE[0]);
 
         if (selectPlay == 1) {
             System.out.print("Friend Player Name : ");
@@ -103,13 +141,14 @@ public class Tictactoe implements Playable, Simulatable, Printable {
         } else {
             this.player2 = new AIPlayer(AILevel.EXPERT);
         }
+        this.player2.setStone(STONE[1]);
     }
 
     @Override
     public void finish() {
-        System.out.printf(" %s %d : %d %s \n", player1.getName(), player1.getWinNum(), player2.getWinNum(), player2.getName());
+        System.out.println("Game Board Reset~~~~");
         reset();
-        curPlayer = (curPlayer == player1) ? player2 : player1;
+        curPlayer = (curPlayer == player1) ? player2 : player1;     // 진 사람이 선이 된다.
     }
 
     @Override

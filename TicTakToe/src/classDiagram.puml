@@ -2,7 +2,7 @@
 
 /' Player's Interface '/
 interface Inputable {
-    + {abstract} void getInput()
+    + {abstract} void getInput(char[][] board)
 }
 
 /' Tictactoe's Interface '/
@@ -36,22 +36,27 @@ abstract class Player implements Inputable  {
     - int winNum
     - int loseNum
     - Position pos
+    - char stone
     + Player()
     + Player(String name)
-    + {abstract} void getInput()
 }
 
 class HumanPlayer extends Player {
     + HumanPlayer(String name)
-    + getInput()
+    + void getInput(char[][] board)
 }
 
 class AIPlayer extends Player {
+    - {static} int[][][] TWO_BY_TWO
+    - {static} int[][][] THREE_ALL
+    - {static} int[][] FIRST_POSITION
     - String level
     + AIPlayer(String level)
-    + getInput()
-    - getInput_Beginner()
-    - getInput_Expert()
+    + void getInput(char[][] board)
+    - void getInput_Beginner(char[][] board)
+    - void getInput_Expert(char[][] board)
+    - boolean chkTwoByTwo(char[][] board, int x, int y)
+    - char changeNumToBoard(char[][] board, int num)
 }
 
 class Tictactoe implements Playable, Simulatable, Printable{
@@ -75,9 +80,13 @@ class Tictactoe implements Playable, Simulatable, Printable{
 }
 
 class TictactoeRule {
+    + {static} int[][] THREE_CHK_TYPE
     + {static} boolean chkVictoryCondition(char[][] board, Position pos)
+    + {static} boolean chkDrawCondition(char[][] board)
     + {static} boolean isRangeOfBoard(Position pos)
+    + {static} boolean isRangeOfBoard(int x, int y)
     + {static} boolean isEnabled(char[][] board, Position pos)
+    + {static} boolean isEnabled(char[][] board, int x, int y)
 }
 
 enum AILevel {

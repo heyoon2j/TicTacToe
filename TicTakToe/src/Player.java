@@ -3,6 +3,7 @@ public abstract class Player implements Inputable {
     private int winNum;
     private int loseNum;
     private Position pos;
+    private char stone;
 
     Player(){}
     Player(String name){
@@ -41,6 +42,12 @@ public abstract class Player implements Inputable {
         this.pos = pos;
     }
 
-    @Override
-    abstract public void getInput();
+    public char getStone() {
+        return stone;
+    }
+
+    public void setStone(char stone) {
+        this.stone = stone;
+    }
+
 }

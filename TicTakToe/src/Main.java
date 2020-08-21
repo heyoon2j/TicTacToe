@@ -13,14 +13,19 @@ public class Main {
         System.out.println("--------------------");
 
         while(true) {
-            System.out.print("Select Number : ");
-            selectNumber = sc.nextInt();
-            sc.nextLine();
+            try {
+                System.out.print("Select Number : ");
+                selectNumber = sc.nextInt();
+                sc.nextLine();
 
-            if (selectNumber == 1 || selectNumber == 2) {
-                break;
-            }else{
-                System.out.println("Input Error. Only Input '1' or '2'");
+                if (selectNumber == 1 || selectNumber == 2) {
+                    break;
+                }
+            }catch(Exception e){
+                sc.nextLine();
+            }finally {
+                if(selectNumber != 1 && selectNumber != 2)
+                    System.out.println("Input Error. Only Input '1' or '2'");
             }
         }
 

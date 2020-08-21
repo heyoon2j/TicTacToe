@@ -1,3 +1,3 @@
 public interface Inputable {
-    void getInput();
+    void getInput(char[][] board);
 }
